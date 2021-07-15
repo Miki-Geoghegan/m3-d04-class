@@ -2,11 +2,11 @@ import React, {useState, useEffect} from 'react';
 import './App.css';
 
 
-function App() {
+function Example() {
   
 
-
-  const [color, setColor] = useState()
+  
+  const [isLogged, setIsLogged] = useState(false)
 
   /* this following function is a call to an external API: */
 
@@ -38,21 +38,25 @@ function App() {
       <h1>Hello Pizza Bytes</h1>
 
       {color ? <img src={color.image.named} /> : <p>no color on the state at present</p>}
+      {/* the above will show EITHER the image (if there is a colour) OR the p tag (else) */}
 
-      <button onClick={getColor}>Get new color</button> {/* we can call the function in this way - useEffect in the above form, means it will render only after the frist blank render - then you can run it manually... if we added [color], it would run in an infinate loop, so in this example, each time the colour changed it would run, changing the colour again */}
+      <button onClick={() => setIsLogged(!isLogged)}>{isLogged&& 'Log in'} {/* can combine more if you add () i.e. {(isLogged && true) && 'Log out'} */}
+      {!isLogged && 'Log out'}</button> {/* this works because the boolean shortcut will return either a boolean OR something to render - react will not display null, undefined, true, false etc. it will result in React not rendering anything, so if it is one of these, nothing will render*/}
+
+     {/*  the other way to do this would be with an if condition i.e. 
+     if(isLogged) return 'Log out'
+     else return 'Log in'
+     This if condition would need to be wrapped inside a function which is too much code, the above is preferable */}
+
+     {/* you could say when user is logged in I want to display logout as well as some image or text i.e.
+     {isLogged && <p>Hello logged-in user</p>}, this is outside of the button 
+     You could also create own element i.e. <MyGreetings />, this would look like:
+     {isLogged && <MyGreetings />},*/}
+
+    {/*  The boolean shortcut we have used only works when there are two possible values, i.e. on or off, the best syntax is {color ? <img src={} /> } : <p>Hello</p>*/}
       
     </div>
   );
 }
 
 export default App;
-
-
-
-/**
-  useEffect(()=>getColor()) -> will run after every render, in a continuos cycle. This corresponds to the componentDidUpdate lifecycle
-  useEffect(()=>getColor(), []) -> will render ONLY after the first blank render, this corresponds to the componentDidMount lifecycle
-  useEffect(()=>getColor(), [color]) -> will wait for the state to change before running. This is special and runs only on a change of state
-  
-  useEffect(()=>{return console.log('runs on unmount')}) -> will run once the component is done, also called clean-up. This corresonds to a componentWillUnmount
-*/
